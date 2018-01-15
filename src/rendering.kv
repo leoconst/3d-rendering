@@ -1,0 +1,124 @@
+#:kivy 1.10.0
+
+
+#:set color_foreground (1, 1, 1, 1)
+#:set color_background (39 / 255, 40 / 255, 34 / 255, 0.6)
+
+
+<ScrollableLabel>:
+    Label:
+        text_size: (self.width, None)
+        size_hint_y: None
+        height: self.texture_size[1]
+
+
+<ConsoleOutput>:
+    # color: color_foreground
+
+    canvas.before:
+        Color:
+            rgba: color_background
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+
+<Console>:
+    background_color: (0, 0, 0, 0)  # Transparent background
+    foreground_color: color_foreground
+    cursor_color: color_foreground
+
+    size_hint_y: None
+    height: self.minimum_height
+
+    canvas.before:
+        Color:
+            rgba: color_background
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+
+<DebugLabel,FPSCounter>:
+    color: color_foreground
+    size: self.texture_size
+    padding_x: 2
+    shown: False
+
+    canvas.before:
+        Color:
+            rgba: color_background
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+
+<Notification>
+    color: color_foreground
+    padding: (3, 2)
+    size: self.texture_size
+    size_hint: (None, None)
+
+    canvas.before:
+        Color:
+            rgba: color_background
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+    canvas.after:
+        Color:
+            rgb: color_foreground
+        Line:
+            points: (self.x, self.y + 1, self.right, self.y + 1)
+
+
+<Camera3D>:
+    canvas.before:
+        Color:
+            rgb: self.clear_color
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+    DebugLabel:
+        text: 'debug'
+
+
+<WidgetManager>:
+    cameras: cameras
+    console_layout: console_layout
+    notification_layout: notification_layout
+    fps_counter: fps_counter
+
+    frame_rate: 30
+    timescale: 0.5
+    show_debug: True
+
+    CameraGrid:
+        id: cameras
+        rows: 1
+        cols: 1
+        spacing: 1
+
+        Camera3D:
+
+    AnchorLayout:
+        id: console_layout
+        anchor_y: 'bottom'
+        padding: 5
+
+        size_hint: (1, 0.4)
+
+    AnchorLayout:
+        anchor_y: 'top'
+
+        FPSCounter:
+            id: fps_counter
+            size_hint: (None, None)
+
+    StackLayout:
+        id: notification_layout
+        orientation: 'tb-lr'
+        padding: 10
+        spacing: 2
